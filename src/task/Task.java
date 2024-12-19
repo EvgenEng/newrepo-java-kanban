@@ -23,34 +23,28 @@ public class Task {
     }
 
     public Integer getId() {
-
         return id;
     }
 
     public String getTitle() {
-
         return title;
     }
 
     public String getDescriptions() {
-
         return descriptions;
     }
 
     public TaskStatus getStatus() {
-
         return status;
     }
 
     // Установка статуса задачи
     public void setStatus(TaskStatus taskStatus) {
-
         this.status = taskStatus; // Устанавливаем новый статус
     }
 
     // Установка идентификатора задачи
     public void setId(int id) {
-
         this.id = id; // Устанавливаем новый идентификатор
     }
 
@@ -64,7 +58,6 @@ public class Task {
 
     @Override
     public int hashCode() {
-
         return Integer.hashCode(id);
     }
 
@@ -72,7 +65,6 @@ public class Task {
     }
 
     public String getDescription() {
-
         return descriptions; // Возвращаем описание задачи
     }
 
@@ -81,7 +73,6 @@ public class Task {
     }
 
     public Task copy() {
-
         return new Task(this.title, this.descriptions, this.status, this.id); // Создаем копию задачи
     }
 }
