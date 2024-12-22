@@ -19,16 +19,19 @@ public class Epic extends Task {
     }
 
     public List<Subtask> getSubtasks() {
+
         return new ArrayList<>(subtasks); // Возвращаем копию списка подзадач
     }
 
     // Удаление подзадачи по ID
     public void removeSubtask(int subtaskId) {
+
         subtasks.removeIf(subtask -> subtask.getId() == subtaskId);
     }
 
     // Очистка списка подзадач
     public void clearSubtasks() {
+
         subtasks.clear();
     }
 }

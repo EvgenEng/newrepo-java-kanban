@@ -56,6 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+
         tasks.put(task.getId(), task);
     }
 
@@ -68,11 +69,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
+
         epics.put(epic.getId(), epic);
     }
 
     @Override
     public void deleteTaskById(int id) {
+
         tasks.remove(id);
     }
 
@@ -100,16 +103,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getAllTasks() {
+
         return new ArrayList<>(tasks.values());
     }
 
     @Override
     public List<Subtask> getAllSubtasks() {
+
         return new ArrayList<>(subtasks.values());
     }
 
     @Override
     public List<Epic> getAllEpics() {
+
         return new ArrayList<>(epics.values());
     }
 
