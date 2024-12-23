@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
+
     private final Map<Integer, Node> nodeMap = new HashMap<>(); // Хранение узлов по ID задачи
+
     private Node head; // Голова двусвязного списка
+
     private Node tail; // Хвост двусвязного списка
 
     // Узел двусвязного списка
@@ -25,6 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
+
     public void add(Task task) {
         if (task == null) {
             return;
@@ -42,6 +46,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
+
     public void remove(int id) {
         Node node = nodeMap.remove(id); // Получаем узел из HashMap
         if (node != null) {
@@ -50,6 +55,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
+
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
         Node current = head;
