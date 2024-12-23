@@ -23,6 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node prev;
 
         Node(Task task) {
+
             this.task = task;
         }
     }
