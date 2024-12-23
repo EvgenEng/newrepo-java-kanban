@@ -12,11 +12,13 @@ class InMemoryTaskManagerTests {
     private TaskManager taskManager; // Используем интерфейс TaskManager
 
     @BeforeEach
+
     void setUp() {
         taskManager = Managers.getDefault(); // Используем фабрику для создания экземпляра
     }
 
     @Test
+
     void testAddNewTask() {
         Task task = new Task("Test Task", "Test description");
         taskManager.createTask(task);
@@ -27,6 +29,7 @@ class InMemoryTaskManagerTests {
     }
 
     @Test
+
     void testTaskImmutabilityOnAdd() {
         Task task = new Task("Task 1", "Description 1");
         taskManager.createTask(task);

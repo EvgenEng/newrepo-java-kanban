@@ -14,11 +14,13 @@ class EpicTest {
     private Epic epic;
 
     @BeforeEach
+
     void setUp() {
         epic = new Epic("Epic Title", "Epic Description", 1);
     }
 
     @Test
+
     void addSubtask() {
         Subtask subtask = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 1);
         epic.addSubtask(subtask);
@@ -28,6 +30,7 @@ class EpicTest {
     }
 
     @Test
+
     void getSubtasks() {
         Subtask subtask1 = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 1);
         Subtask subtask2 = new Subtask("Subtask 2", "Subtask Description", epic, TaskStatus.NEW, 2);
@@ -40,6 +43,7 @@ class EpicTest {
     }
 
     @Test
+
     void removeSubtask() {
         Subtask subtask = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 1);
         epic.addSubtask(subtask);
@@ -49,6 +53,7 @@ class EpicTest {
     }
 
     @Test
+
     void clearSubtasks() {
         epic.addSubtask(new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 1));
         epic.addSubtask(new Subtask("Subtask 2", "Subtask Description", epic, TaskStatus.NEW, 2));
