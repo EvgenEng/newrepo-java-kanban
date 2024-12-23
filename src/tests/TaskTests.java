@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskTests {
 
     @Test
+
     void testTaskEqualityById() {
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 1", "Description 1");
@@ -21,6 +22,7 @@ class TaskTests {
     }
 
     @Test
+
     void testSubtaskEqualityById() {
         Epic epic = new Epic("Epic 1", "Epic description", 1); // Создаем эпик
         Subtask subtask1 = new Subtask("Subtask 1", "Description 1", epic, TaskStatus.NEW, 2); // Передаем эпик и статус
@@ -32,6 +34,7 @@ class TaskTests {
     }
 
     @Test
+
     void testTaskHashCode() {
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 1", "Description 1");
