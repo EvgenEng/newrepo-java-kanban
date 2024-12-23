@@ -84,7 +84,7 @@ public class Task {
 
     public void setDescription(String updatedDescription) {
 
-        this.descriptions = updatedDescription; // Устанавливаем новое описание
+        this.descriptions = updatedDescription; //   Устанавливаем новое описание
     }
 
     public Task copy() {
