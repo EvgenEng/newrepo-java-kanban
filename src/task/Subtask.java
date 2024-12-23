@@ -11,11 +11,13 @@ public class Subtask extends Task {
     }
 
     public Epic getEpic() {
+
         return epic;
     }
 
     // Возвращение ID связанного эпика
     public int getEpicId() {
+
         return epic.getId();
     }
 }
