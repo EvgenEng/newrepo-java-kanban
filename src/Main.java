@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-public class Main {
-
-    public static void main(String[] args) {
-        System.out.println("Поехали!");
-    }
-}
-=======
 import interfaces.TaskManager;
 import manager.Managers;
 import task.Epic;
@@ -107,4 +99,3 @@ private static void printAllTasks(TaskManager manager) {
     }
     System.out.println("--------------------------------------------------");
 }
->>>>>>> e849a79 (Первый коммит в ветке develop)
