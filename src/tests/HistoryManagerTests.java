@@ -46,9 +46,10 @@ class HistoryManagerTests {
         assertEquals(1, history.size(), "История должна содержать одну задачу после удаления.");
         assertEquals(task2, history.get(0), "Осталась только вторая задача.");
     }
+
     @Test
 
-    void testAddDuplicateTask() {
+      void testAddDuplicateTask() {
         Task task = new Task("Task 1", "Description 1");
 
         historyManager.add(task);
