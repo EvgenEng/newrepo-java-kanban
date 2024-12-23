@@ -34,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void clearSubtasks() {
         for (Epic epic : epics.values()) {
             List<Subtask> subtasks = epic.getSubtasks();
-            for (Subtask subtask: subtasks){
+            for (Subtask subtask: subtasks) {
                 epic.removeSubtask(subtask.getEpicId());
             }
             updateEpicStatus(epic.getId()); // Исп метод updateEpicStatus
