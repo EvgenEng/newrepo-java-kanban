@@ -1,0 +1,15 @@
+./src/interfaces/HistoryManager.java
+./src/interfaces/TaskManager.java
+./src/Main.java
+./src/manager/InMemoryHistoryManager.java
+./src/manager/InMemoryTaskManager.java
+./src/manager/Managers.java
+./src/task/Epic.java
+./src/task/Subtask.java
+./src/task/Task.java
+./src/task/TaskStatus.java
+./src/tests/EpicTest.java
+./src/tests/HistoryManagerTests.java
+./src/tests/InMemoryTaskManagerTests.java
+./src/tests/ManagersTests.java
+./src/tests/TaskTests.java
