@@ -81,6 +81,7 @@ private static void printAllTasks(TaskManager manager) {
     for (Task task : manager.getAllTasks()) {
         System.out.println(task.getTitle() + " - Статус: " + task.getStatus());
     }
+
     System.out.println("Эпики:");
     for (Epic epic : manager.getAllEpics()) {
         System.out.println(epic.getTitle() + " - Статус: " + epic.getStatus());
@@ -88,6 +89,7 @@ private static void printAllTasks(TaskManager manager) {
             System.out.println("--> " + subtask.getTitle() + " - Статус: " + subtask.getStatus());
         }
     }
+
     System.out.println("Подзадачи:");
     for (Subtask subtask : manager.getAllSubtasks()) {
         System.out.println(subtask.getTitle() + " - Статус: " + subtask.getStatus());
@@ -97,5 +99,6 @@ private static void printAllTasks(TaskManager manager) {
     for (Task task : manager.getHistory()) {
         System.out.println(task.getTitle());
     }
+
     System.out.println("--------------------------------------------------");
 }
