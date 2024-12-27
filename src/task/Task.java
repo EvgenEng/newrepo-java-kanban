@@ -1,6 +1,7 @@
 package task;
 
 public class Task {
+
     private int id; // уник идентификатор задачи
     private String title; // название задачи
     private String descriptions; // описание задачи
@@ -8,6 +9,7 @@ public class Task {
 
     // Конструктор для создания задачи с заданным статусом
     public Task(String title, String descriptions, TaskStatus status, int id) {
+
         this.id = id;
         this.title = title;
         this.descriptions = descriptions;
@@ -16,6 +18,7 @@ public class Task {
 
     // Конструктор по умолчанию, устанавливающий статус NEW
     public Task(String title, String descriptions) {
+
         this.id = 0; // Идентификатор по умолчанию
         this.title = title;
         this.descriptions = descriptions;
@@ -55,7 +58,9 @@ public class Task {
     }
 
     @Override
+
     public boolean equals(Object obj) {
+
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Task task = (Task) obj;
@@ -63,6 +68,7 @@ public class Task {
     }
 
     @Override
+
     public int hashCode() {
 
         return Integer.hashCode(id);
@@ -77,7 +83,8 @@ public class Task {
     }
 
     public void setDescription(String updatedDescription) {
-        this.descriptions = updatedDescription; // Устанавливаем новое описание
+
+        this.descriptions = updatedDescription; //   Устанавливаем новое описание
     }
 
     public Task copy() {
