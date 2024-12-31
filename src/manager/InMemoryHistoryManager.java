@@ -18,18 +18,16 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     // Узел двусвязного списка
     private static class Node {
-        Task task;
-        Node next;
-        Node prev;
+        private Task task;
+        private Node next;
+        private Node prev;
 
         Node(Task task) {
-
             this.task = task;
         }
     }
 
     @Override
-
     public void add(Task task) {
         if (task == null) {
             return;
@@ -47,16 +45,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-
     public void remove(int id) {
-        Node node = nodeMap.remove(id); // Получаем узел из HashMap
+        // Удаляем задачу из истории
+        nodeMap.remove(id); // Удаляем узел из HashMap
+        Node node = nodeMap.get(id); // Получаем узел из HashMap
         if (node != null) {
             removeNode(node); // Удаляем узел из списка
         }
     }
 
     @Override
-
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
         Node current = head;
