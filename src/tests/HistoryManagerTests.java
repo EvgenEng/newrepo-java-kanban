@@ -15,14 +15,12 @@ class HistoryManagerTests {
     private HistoryManager historyManager;
 
     @BeforeEach
-
     void setUp() {
 
         historyManager = Managers.getDefaultHistory(); // Инициализация менеджера истории перед каждым тестом
     }
 
     @Test
-
     void testAddToHistory() {
 
         Task task = new Task("Task 1", "Description 1");
@@ -36,7 +34,6 @@ class HistoryManagerTests {
     }
 
     @Test
-
     void testRemoveFromHistory() {
 
         Task task1 = new Task("Task 1", "Description 1");
@@ -52,7 +49,6 @@ class HistoryManagerTests {
     }
 
     @Test
-
     void testAddDuplicateTask() {
 
         Task task = new Task("Task 1", "Description 1");

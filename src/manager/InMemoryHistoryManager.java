@@ -2,18 +2,14 @@ package manager;
 
 import interfaces.HistoryManager;
 import task.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
     private final Map<Integer, Node> nodeMap = new HashMap<>(); // Хранение узлов по ID задачи
-
     private Node head; // Голова двусвязного списка
-
     private Node tail; // Хвост двусвязного списка
 
     // Узел двусвязного списка
@@ -29,12 +25,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (task == null) {
+        if (task == null || contains(task)) {
             return;
         }
-
-        // Удаляем задачу из списка, если она уже есть
-        remove(task.getId());
 
         // Добавляем задачу в конец списка
         Node newNode = new Node(task);
@@ -47,8 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         // Удаляем задачу из истории
-        nodeMap.remove(id); // Удаляем узел из HashMap
-        Node node = nodeMap.get(id); // Получаем узел из HashMap
+        Node node = nodeMap.remove(id); // Удаляем узел из HashMap
         if (node != null) {
             removeNode(node); // Удаляем узел из списка
         }
@@ -102,5 +94,10 @@ public class InMemoryHistoryManager implements HistoryManager {
                 nextNode.prev = prevNode;
             }
         }
+    }
+
+    // Проверка, содержится ли задача в списке
+    private boolean contains(Task task) {
+        return nodeMap.containsKey(task.getId());
     }
 }
