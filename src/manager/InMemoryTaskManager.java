@@ -7,6 +7,7 @@ import task.Subtask;
 import task.Task;
 import task.TaskStatus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        int epicId = subtask.getEpicId();
+        int epicId = (int) subtask.getEpicId();
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(epicId);
     }
@@ -196,5 +197,31 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
         }
+    }
+
+    protected void addTask(Task task) {
+        task.setId(idCounter++); // Устанавливаем уникальный идентификатор
+        tasks.put(task.getId(), task); // Добавляем задачу в Map
+        historyManager.add(task); // Добавляем задачу в историю
+    }
+
+    protected void removeTask(int id) throws ManagerSaveException {
+        if (tasks.containsKey(id)) {
+            tasks.remove(id); // Удаляем задачу из Map
+            historyManager.remove(id); // Удаляем задачу из истории
+        } else if (subtasks.containsKey(id)) {
+            subtasks.remove(id); // Удаляем подзадачу
+            historyManager.remove(id);
+        } else if (epics.containsKey(id)) {
+            epics.remove(id); // Удаляем эпик
+            historyManager.remove(id);
+        } else {
+            throw new IllegalArgumentException("Задача с id " + id + " не найдена.");
+        }
+    }
+
+    public String taskToString(Task task) {
+        return String.format("Task{id=%d, name='%s', status='%s'}",
+                task.getId(), task.getName(), task.getStatus());
     }
 }
