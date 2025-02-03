@@ -25,6 +25,16 @@ public class Task {
         this.status = TaskStatus.NEW; // Статус по умолчанию
     }
 
+    public Task(String title, boolean isDone) {
+    }
+
+    public Task(String name, boolean done, String description) {
+    }
+
+    public Task() {
+
+    }
+
     public Integer getId() {
 
         return id;
@@ -88,5 +98,17 @@ public class Task {
     public Task copy() {
 
         return new Task(this.title, this.descriptions, this.status, this.id); // Создаем копию задачи
+    }
+
+    public Object getType() {
+        return null;
+    }
+
+    public Object getName() {
+        return null;
+    }
+
+    public Object getEpicId() {
+        return null;
     }
 }
