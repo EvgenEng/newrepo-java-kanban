@@ -4,5 +4,5 @@ public enum TaskStatus {
 
     DONE,
     IN_PROGRESS,
-    NEW
+    NOT_STARTED, NEW
 }

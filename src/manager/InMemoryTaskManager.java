@@ -55,14 +55,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws ManagerSaveException {
 
         tasks.put(task.getId(), task);
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
-        int epicId = (int) subtask.getEpicId();
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
+        int epicId = subtask.getEpicId();
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(epicId);
     }
@@ -198,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    protected void addTask(Task task) {
+    protected void addTask(Task task) throws ManagerSaveException {
         task.setId(idCounter++); // Устанавливаем уникальный идентификатор
         tasks.put(task.getId(), task); // Добавляем задачу в Map
         historyManager.add(task); // Добавляем задачу в историю
@@ -222,5 +222,31 @@ public class InMemoryTaskManager implements TaskManager {
     public String taskToString(Task task) {
         return String.format("Task{id=%d, name='%s', status='%s'}",
                 task.getId(), task.getName(), task.getStatus());
+    }
+
+    protected void addEpic(Epic epic) throws ManagerSaveException {
+        if (epic == null) throw new ManagerSaveException("Epic is null");
+        epic.setId(++idCounter);
+        epics.put(epic.getId(), epic);
+    }
+
+    protected void addSubtask(Subtask subtask) throws ManagerSaveException {
+        if (subtask == null) throw new ManagerSaveException("Subtask is null");
+        subtask.setId(++idCounter);
+        subtasks.put(subtask.getId(), subtask);
+    }
+
+    protected void removeEpic(int id) throws ManagerSaveException {
+        if (!epics.containsKey(id)) throw new ManagerSaveException("Epic not found");
+        epics.remove(id);
+    }
+
+    protected void removeSubtask(int id) throws ManagerSaveException {
+        if (!subtasks.containsKey(id)) throw new ManagerSaveException("Subtask not found");
+        subtasks.remove(id);
+    }
+
+    public Epic getEpic(int epicId) {
+        return epics.get(epicId);
     }
 }

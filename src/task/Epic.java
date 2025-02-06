@@ -1,7 +1,6 @@
 package task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Epic extends Task {
@@ -13,14 +12,9 @@ public class Epic extends Task {
         this.subtasks = new ArrayList<>();
     }
 
-    public Epic(String name, boolean done, String description, List<Subtask> subtasks) {
-        this.subtasks = subtasks;
-    }
-
-    public Epic(String name, boolean done, String description) {
-        // Инициализация переменной subtasks
-        this.subtasks = (List<Subtask>) new HashMap<>();
-        // Остальные ваши параметры
+    public Epic(String name, String description) {
+        super(name, description);
+        this.subtasks = new ArrayList<>(); // Инициализация списка
     }
 
     public void addSubtask(Subtask subtask) {

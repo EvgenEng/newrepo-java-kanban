@@ -3,24 +3,29 @@ package task;
 public class Subtask extends Task {
     private Epic epic;
 
-    // Конструктор с параметром статус и ID
+    // Исправленный конструктор
+    public Subtask(String title, String description, Epic epic) {
+        super(title, description);
+        this.epic = epic;
+        if (epic != null) {
+            epic.addSubtask(this);
+        }
+    }
+
+    // Конструктор с параметрами статус и ID
     public Subtask(String title, String description, Epic epic, TaskStatus status, int id) {
         super(title, description, status, id);
         this.epic = epic;
-        epic.addSubtask(this); // Добавляем подзадачу в эпик
+        if (epic != null) {
+            epic.addSubtask(this);
+        }
     }
 
-    public Subtask(String name, boolean done, String description, Epic epic) {
+    public Integer getEpicId() {
+        return (epic != null) ? epic.getId() : -1;
     }
 
     public Epic getEpic() {
-
         return epic;
-    }
-
-    // Возвращение ID связанного эпика
-    public Integer getEpicId() {
-
-        return epic.getId();
     }
 }
