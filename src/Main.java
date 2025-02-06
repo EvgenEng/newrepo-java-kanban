@@ -6,7 +6,10 @@ import task.Subtask;
 import task.Task;
 import task.TaskStatus;
 
-public static void main(String[] args) throws ManagerSaveException {
+import java.io.File;
+
+public class Main {
+    public static void main(String[] args) throws ManagerSaveException {
     File dataFile = new File("tasks.csv");
     TaskManager taskManager = new FileBackedTaskManager(dataFile.getAbsolutePath());
 
@@ -89,4 +92,5 @@ private static void printAllTasks(TaskManager manager) {
     }
 
     System.out.println("--------------------------------------------------");
+    }
 }
