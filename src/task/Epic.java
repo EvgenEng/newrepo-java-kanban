@@ -12,6 +12,11 @@ public class Epic extends Task {
         this.subtasks = new ArrayList<>();
     }
 
+    public Epic(String name, String description) {
+        super(name, description);
+        this.subtasks = new ArrayList<>(); // Инициализация списка
+    }
+
     public void addSubtask(Subtask subtask) {
         if (subtask != null && !subtasks.contains(subtask)) { // Проверка на null и дубликаты
             subtasks.add(subtask);

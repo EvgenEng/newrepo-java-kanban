@@ -25,35 +25,28 @@ public class Task {
         this.status = TaskStatus.NEW; // Статус по умолчанию
     }
 
-    public Integer getId() {
+    public Task() {
+    }
 
+    public Integer getId() {
         return id;
     }
 
     public String getTitle() {
-
         return title;
     }
 
-    public String getDescriptions() {
-
-        return descriptions;
-    }
-
     public TaskStatus getStatus() {
-
         return status;
     }
 
     // Установка статуса задачи
     public void setStatus(TaskStatus taskStatus) {
-
         this.status = taskStatus; // Устанавливаем новый статус
     }
 
     // Установка идентификатора задачи
     public void setId(int id) {
-
         this.id = id; // Устанавливаем новый идентификатор
     }
 
@@ -68,25 +61,18 @@ public class Task {
 
     @Override
     public int hashCode() {
-
         return Integer.hashCode(id);
     }
 
-    public void setEpicId(Integer id) {
-    }
-
     public String getDescription() {
-
         return descriptions; // Возвращаем описание задачи
     }
 
-    public void setDescription(String updatedDescription) {
-
-        this.descriptions = updatedDescription; //   Устанавливаем новое описание
+    public Object getName() {
+        return null;
     }
 
-    public Task copy() {
-
-        return new Task(this.title, this.descriptions, this.status, this.id); // Создаем копию задачи
+    public Object getEpicId() {
+        return null;
     }
 }

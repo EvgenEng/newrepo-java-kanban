@@ -1,5 +1,6 @@
 package interfaces;
 
+import manager.ManagerSaveException;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -14,9 +15,9 @@ public interface TaskManager {
 
     void createEpic(Epic epic);
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws ManagerSaveException;
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws ManagerSaveException;
 
     void updateEpic(Epic epic);
 
