@@ -16,6 +16,13 @@ import java.util.List;
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public final String filePath;
 
+    // 1. Добавляем enum для типов задач
+    enum TaskType {
+        TASK,
+        EPIC,
+        SUBTASK
+    }
+
     public FileBackedTaskManager(String path) throws ManagerSaveException {
         this.filePath = path;
         createFileIfNotExists();
@@ -95,49 +102,43 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void loadFromFile() throws IOException, ManagerSaveException {
         List<String> lines = Files.readAllLines(Paths.get(filePath));
         if (lines.size() <= 1) return;
-        // Чтение эпиков
+
+        // 2. Удаляем разделение на эпики и остальные задачи. Один цикл для всех типов.
         for (int i = 1; i < lines.size(); i++) {
             String line = lines.get(i);
-            String[] fields = line.split(",");
-            if ("EPIC".equals(fields[1])) {
-                createTaskFromLine(line);
-                System.out.println("Загружен эпик: " + line);
-            }
-        }
-        // Чтение остальных задач
-        for (int i = 1; i < lines.size(); i++) {
-            String line = lines.get(i);
-            String[] fields = line.split(",");
-            if (!"EPIC".equals(fields[1])) {
-                createTaskFromLine(line);
-                System.out.println("Загружена задача: " + line);
-            }
+            createTaskFromLine(line);
+            System.out.println("Загружена задача: " + line);
         }
     }
 
     private void createTaskFromLine(String line) throws ManagerSaveException {
         String[] fields = line.split(",");
         int id = Integer.parseInt(fields[0]);
-        String type = fields[1];
+
+        // 3. Используем enum вместо строковых констант
+        TaskType type = TaskType.valueOf(fields[1].trim());
+
         String name = fields[2];
-        TaskStatus status = TaskStatus.valueOf(fields[3].trim()); // Добавлен trim() для удаления лишних пробелов
+        TaskStatus status = TaskStatus.valueOf(fields[3].trim());
         String description = fields[4];
-        int epicId = fields.length > 5 && !fields[5].isEmpty() ? Integer.parseInt(fields[5]) : -1;
+        int epicId = fields.length > 5 && !fields[5].isEmpty()
+                ? Integer.parseInt(fields[5])
+                : -1;
 
         switch (type) {
-            case "TASK":
+            case TASK:
                 Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(status);
                 super.addTask(task);
                 break;
-            case "EPIC":
+            case EPIC:
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(status);
                 super.addEpic(epic);
                 break;
-            case "SUBTASK":
+            case SUBTASK:
                 Epic epicForSubtask = super.getEpic(epicId);
                 if (epicForSubtask != null) {
                     Subtask subtask = new Subtask(name, description, epicForSubtask);
@@ -146,6 +147,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     super.addSubtask(subtask);
                 }
                 break;
+            default:
+                throw new ManagerSaveException("Неизвестный тип задачи: " + type);
         }
     }
 
