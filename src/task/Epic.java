@@ -43,6 +43,7 @@ public class Epic extends Task {
         subtasks.clear();
         updateTiming();
     }
+
     // Основная логика обновления времени эпика
     public void updateTiming() {
         if (subtasks.isEmpty()) {
