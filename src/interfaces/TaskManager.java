@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TaskManager {
 
+    List<Task> getPrioritizedTasks();
+
     void createTask(Task task);
 
     void createSubtask(Subtask subtask);
@@ -31,8 +33,6 @@ public interface TaskManager {
 
     Subtask getSubtaskById(int id);
 
-    Epic getEpicById(int id);
-
     List<Task> getAllTasks();
 
     List<Subtask> getAllSubtasks();
@@ -49,4 +49,14 @@ public interface TaskManager {
     void clearSubtasks(); // Метод для очистки всех подзадач
 
     void clearEpics(); // Метод для очистки всех эпиков и связанных с ними подзадач
+
+    void addTask(Task task);
+
+    void addEpic(Epic epic);
+
+    void addSubtask(Subtask subtask);
+
+    void removeTaskById(int id);
+
+    void clearAllTasks();
 }
