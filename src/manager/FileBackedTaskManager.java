@@ -53,37 +53,41 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void addTask(Task task) throws ManagerSaveException {
-        super.addTask(task);
         saveToFile();
     }
 
     @Override
     public void addEpic(Epic epic) throws ManagerSaveException {
-        super.addEpic(epic);
         saveToFile();
     }
 
     @Override
     public void addSubtask(Subtask subtask) throws ManagerSaveException {
-        super.addSubtask(subtask);
         saveToFile();
     }
 
     @Override
+    public void removeTaskById(int id) {
+
+    }
+
+    @Override
+    public void clearAllTasks() {
+
+    }
+
+    @Override
     public void removeTask(int id) throws ManagerSaveException {
-        super.removeTask(id);
         saveToFile();
     }
 
     @Override
     public void removeEpic(int id) throws ManagerSaveException {
-        super.removeEpic(id);
         saveToFile();
     }
 
     @Override
     public void removeSubtask(int id) throws ManagerSaveException {
-        super.removeSubtask(id);
         saveToFile();
     }
 
@@ -130,13 +134,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(status);
-                super.addTask(task);
                 break;
             case EPIC:
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(status);
-                super.addEpic(epic);
                 break;
             case SUBTASK:
                 Epic epicForSubtask = super.getEpic(epicId);
@@ -144,7 +146,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     Subtask subtask = new Subtask(name, description, epicForSubtask);
                     subtask.setId(id);
                     subtask.setStatus(status);
-                    super.addSubtask(subtask);
                 }
                 break;
             default:
@@ -157,20 +158,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> lines = new ArrayList<>();
             lines.add("id,type,name,status,description,epic");
 
-            // Сначала эпики
-            for (Epic epic : getAllEpics()) {
-                lines.add(TaskConverter.taskToString(epic));
-            }
-
-            // Затем подзадачи
-            for (Subtask subtask : getAllSubtasks()) {
-                lines.add(TaskConverter.taskToString(subtask));
-            }
-
-            // Обычные задачи
-            for (Task task : getAllTasks()) {
-                lines.add(TaskConverter.taskToString(task));
-            }
+            getAllEpics().forEach(epic -> lines.add(TaskConverter.taskToString(epic)));
+            getAllSubtasks().forEach(subtask -> lines.add(TaskConverter.taskToString(subtask)));
+            getAllTasks().forEach(task -> lines.add(TaskConverter.taskToString(task)));
 
             Files.write(Paths.get(filePath), lines);
         } catch (IOException e) {
