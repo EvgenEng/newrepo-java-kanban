@@ -4,6 +4,7 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 import task.TaskStatus;
+import task.TaskType; // Импорт TaskType из нового класса
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +16,6 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public final String filePath;
-
-    // 1. Добавляем enum для типов задач
-    enum TaskType {
-        TASK,
-        EPIC,
-        SUBTASK
-    }
 
     public FileBackedTaskManager(String path) throws ManagerSaveException {
         this.filePath = path;
@@ -67,18 +61,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
-
-    }
-
-    @Override
-    public void clearAllTasks() {
-
-    }
-
-    @Override
     public void removeTask(int id) throws ManagerSaveException {
-        saveToFile();
+        super.removeTask(id);
     }
 
     @Override

@@ -25,7 +25,14 @@ public class Task {
         this(title, description, TaskStatus.NEW, 0);
     }
 
-    public Task(String s, String description, TaskStatus taskStatus, int i, LocalDateTime of, int i1) {
+    // Конструктор с временем начала и продолжительностью
+    public Task(String title, String description, TaskStatus status, int id, LocalDateTime startTime, int durationMinutes) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(durationMinutes); // Преобразуем минуты в Duration
     }
 
     // Геттеры и сеттеры
@@ -77,9 +84,12 @@ public class Task {
         this.startTime = startTime;
     }
 
+    // Метод для получения времени окончания задачи
     public LocalDateTime getEndTime() {
-        if (startTime == null || duration == null) return null;
-        return startTime.plus(duration);
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration); // Используем Duration для вычисления времени окончания
     }
 
     // Переопределение equals и hashCode
@@ -96,6 +106,7 @@ public class Task {
         return Objects.hash(id);
     }
 
+    // Переопределение toString для удобного вывода информации о задаче
     @Override
     public String toString() {
         return "Task{" +
@@ -106,9 +117,5 @@ public class Task {
                 ", duration=" + (duration != null ? duration.toMinutes() + "m" : "null") +
                 ", startTime=" + (startTime != null ? startTime.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "null") +
                 '}';
-    }
-
-    public Object getName() {
-        return null;
     }
 }

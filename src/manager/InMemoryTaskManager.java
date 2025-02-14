@@ -13,7 +13,7 @@ import java.util.*;
 public abstract class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
     private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected  final Map<Integer, Subtask> subtasks = new HashMap<>();
     private static final Map<Integer, Epic> epics = new HashMap<>();
     private static final HistoryManager historyManager = Managers.getDefaultHistory();
 
@@ -63,17 +63,93 @@ public abstract class InMemoryTaskManager implements TaskManager {
         tasks.put(task.getId(), task);
     }
 
-    public abstract void addTask(Task task) throws ManagerSaveException;
+    @Override
+    public void addTask(Task task) {
+        if (task.getStartTime() != null) {
+            for (Task existingTask : tasks.values()) {
+                System.out.println("Проверяем пересечение с задачей: " + existingTask);
+                if (isTimeOverlap(existingTask, task)) {
+                    System.out.println("Пересечение найдено между задачами: " + existingTask + " и " + task);
+                    throw new IllegalArgumentException("Задачи пересекаются по времени!");
+                }
+            }
+            prioritizedTasks.add(task);
+        }
+        tasks.put(task.getId(), task);
+        System.out.println("Задача добавлена: " + task);
+    }
+
+    private boolean isTimeOverlap(Task existingTask, Task newTask) {
+        if (existingTask.getStartTime() == null || newTask.getStartTime() == null) {
+            return false; // Если у задачи нет времени, пересечения нет
+        }
+        LocalDateTime existingStart = existingTask.getStartTime();
+        LocalDateTime existingEnd = existingTask.getEndTime();
+        LocalDateTime newStart = newTask.getStartTime();
+        LocalDateTime newEnd = newTask.getEndTime();
+
+        System.out.println("Проверяем пересечение: ");
+        System.out.println("Существующая задача: start=" + existingStart + ", end=" + existingEnd);
+        System.out.println("Новая задача: start=" + newStart + ", end=" + newEnd);
+
+        boolean overlap = newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart);
+        System.out.println("Результат проверки пересечения: " + overlap);
+        return overlap;
+    }
 
     public abstract void addEpic(Epic epic) throws ManagerSaveException;
 
-    public abstract void addSubtask(Subtask subtask) throws ManagerSaveException;
+    public void addSubtask(Subtask subtask) throws ManagerSaveException {
+        subtasks.put(subtask.getId(), subtask); // Добавляем подзадачу в список
+        Epic epic = subtask.getEpic();
+        epic.addSubtask(subtask); // Добавляем подзадачу в эпик
+        updateEpicStatus(epic); // Обновляем статус эпика
+    }
 
-    public abstract void removeTask(int id) throws ManagerSaveException;
+    public void removeTask(int id) throws ManagerSaveException {
+    }
 
     public abstract void removeEpic(int id) throws ManagerSaveException;
 
-    public abstract void removeSubtask(int id) throws ManagerSaveException;
+    public void removeSubtask(int id) throws ManagerSaveException {
+        Subtask subtask = subtasks.remove(id); // Удаляем подзадачу из списка
+        if (subtask != null) {
+            Epic epic = subtask.getEpic();
+            epic.removeSubtask(id); // Удаляем подзадачу из эпика
+            updateEpicStatus(epic); // Обновляем статус эпика
+        }
+    }
+
+    private void updateEpicStatus(Epic epic) {
+        List<Subtask> subtasks = epic.getSubtasks();
+        if (subtasks.isEmpty()) {
+            epic.setStatus(TaskStatus.NEW);
+            return;
+        }
+
+        boolean allNew = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.NEW);
+        boolean allDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.DONE);
+
+        if (allNew) {
+            epic.setStatus(TaskStatus.NEW);
+        } else if (allDone) {
+            epic.setStatus(TaskStatus.DONE);
+        } else {
+            epic.setStatus(TaskStatus.IN_PROGRESS);
+        }
+    }
+
+    public void clearAllTasks() throws ManagerSaveException {
+        for (Epic epic : epics.values()) {
+            epic.clearSubtasks(); // Очищаем подзадачи эпика
+            updateEpicStatus(epic); // Обновляем статус эпика
+        }
+        tasks.clear(); // Очищаем обычные задачи
+        subtasks.clear(); // Очищаем подзадачи
+        epics.clear(); // Очищаем эпики
+    }
+
+
 
     @Override
     public void updateTask(Task task) {

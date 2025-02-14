@@ -55,8 +55,4 @@ public interface TaskManager {
     void addEpic(Epic epic);
 
     void addSubtask(Subtask subtask);
-
-    void removeTaskById(int id);
-
-    void clearAllTasks();
 }

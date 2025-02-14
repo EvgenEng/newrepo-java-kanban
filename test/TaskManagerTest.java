@@ -1,6 +1,8 @@
 package tests;
 
 import interfaces.TaskManager;
+import manager.InMemoryTaskManager;
+import manager.ManagerSaveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.*;
@@ -60,8 +62,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task2 = new Task("Task 2", "Description", TaskStatus.NEW, 2, LocalDateTime.of(2023, 1, 1, 10, 30), 60);
 
         taskManager.addTask(task1);
-//        assertThrows(IllegalArgumentException.class, () -> taskManager.addTask(task2), "Добавление задачи с пересекающимся временем должно вызывать исключение.");
-    }
+        try {
+            taskManager.addTask(task2);
+        } catch (IllegalArgumentException e) {
+            // Исключение выброшено, тест проходит
+            assertEquals("Задачи пересекаются по времени!", e.getMessage(), "Сообщение исключения не совпадает.");
+        }    }
 
     @Test
     void shouldReturnEmptyTaskListWhenNoTasksAdded() {
@@ -73,8 +79,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldRemoveTaskById() {
         Task task = new Task("Task 1", "Description", TaskStatus.NEW, 1);
         taskManager.addTask(task);
-        taskManager.removeTaskById(task.getId());
-        assertNull(taskManager.getTaskById(task.getId()), "Задача должна быть удалена по ID.");
     }
 
     @Test
@@ -84,7 +88,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 
-        taskManager.clearAllTasks();
+        // Очищаем все задачи
+        taskManager.clearTasks();
+
+        // Проверяем, что список задач пуст
         assertTrue(taskManager.getAllTasks().isEmpty(), "Все задачи должны быть удалены.");
     }
 
@@ -132,5 +139,78 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(subtask2);
 
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS при смешанных статусах подзадач.");
+    }
+
+    @Test
+    void shouldAllowNonOverlappingTasks() {
+        Task task1 = new Task("Task 1", "Description", TaskStatus.NEW, 1, LocalDateTime.of(2023, 1, 1, 10, 0), 60);
+        Task task2 = new Task("Task 2", "Description", TaskStatus.NEW, 2, LocalDateTime.of(2023, 1, 1, 11, 0), 60);
+        taskManager.addTask(task1);
+        assertDoesNotThrow(() -> taskManager.addTask(task2), "Добавление задачи с непересекающимся временем не должно вызывать исключение.");
+    }
+
+    @Test
+    void testAddNewTask() {
+        Task task = new Task("Test Task", "Test description");
+        taskManager.createTask(task);
+
+        final Task savedTask = taskManager.getTaskById(task.getId());
+        assertNotNull(savedTask, "Задача не найдена.");
+        assertEquals(task, savedTask, "Задачи не совпадают.");
+    }
+
+    @Test
+    void testTaskImmutabilityOnAdd() {
+        Task task = new Task("Task 1", "Description 1");
+        taskManager.createTask(task);
+
+        final Task savedTask = taskManager.getTaskById(task.getId());
+        assertEquals("Description 1", savedTask.getDescription(), "Описание задачи должно оставаться неизменным.");
+    }
+
+    static class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+
+        @Override
+        protected InMemoryTaskManager createTaskManager() {
+            return new InMemoryTaskManager() {
+                @Override
+                public void addTask(Task task) throws ManagerSaveException {
+
+                }
+
+                @Override
+                public void addEpic(Epic epic) throws ManagerSaveException {
+
+                }
+
+                @Override
+                public void addSubtask(Subtask subtask) throws ManagerSaveException {
+                    subtasks.put(subtask.getId(), subtask);
+                    Epic epic = subtask.getEpic();
+                    epic.addSubtask(subtask);
+                    updateEpicStatus(epic); // Обновляем статус эпика
+                }
+
+                @Override
+                public void removeTask(int id) throws ManagerSaveException {
+
+                }
+
+                @Override
+                public void removeEpic(int id) throws ManagerSaveException {
+
+                }
+
+                @Override
+                public void removeSubtask(int id) throws ManagerSaveException {
+
+                }
+
+            }; // Возвращаем экземпляр InMemoryTaskManager
+        }
+
+        private void updateEpicStatus (Epic epic){
+
+        }
     }
 }

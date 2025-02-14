@@ -28,16 +28,6 @@ public class Managers {
             }
 
             @Override
-            public void removeTaskById(int id) {
-
-            }
-
-            @Override
-            public void clearAllTasks() {
-
-            }
-
-            @Override
             public void removeTask(int id) throws ManagerSaveException {
 
             }
