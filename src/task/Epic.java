@@ -104,9 +104,6 @@ public class Epic extends Task {
                 '}';
     }
 
-    //public void updateEpicTiming() {
-    //}
-
     @Override
     public TaskStatus getStatus() {
         if (subtasks.isEmpty()) {
