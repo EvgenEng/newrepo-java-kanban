@@ -44,7 +44,7 @@ public interface TaskManager {
     List<Task> getAllTasks();
 
     List<Subtask> getAllSubtasks();
-    
+
     List<Epic> getAllEpics();
 
     // Получение подзадач для эпика
