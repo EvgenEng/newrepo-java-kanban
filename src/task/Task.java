@@ -118,4 +118,8 @@ public class Task {
                 ", startTime=" + (startTime != null ? startTime.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "null") +
                 '}';
     }
+
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
 }

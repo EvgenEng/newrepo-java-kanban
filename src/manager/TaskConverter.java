@@ -1,9 +1,7 @@
 package manager;
 
-import task.Epic;
-import task.Subtask;
-import task.Task;
-import task.TaskStatus;
+import interfaces.TaskManager;
+import task.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -45,10 +43,10 @@ public class TaskConverter {
     }
 
     // Десериализация строки CSV в задачу
-    public static Task taskFromString(String line) {
+    public static Task taskFromString(String line, TaskManager manager) {
         String[] fields = line.split(",", -1); // Важно: используем -1 для пустых полей
         int id = Integer.parseInt(fields[0]);
-        String type = fields[1];
+        TaskType type = TaskType.valueOf(fields[1]); // Используем TaskType
         String title = fields[2];
         TaskStatus status = TaskStatus.valueOf(fields[3]);
         String description = fields[4];
@@ -58,7 +56,7 @@ public class TaskConverter {
         Duration duration = parseDuration(fields[7]);
 
         switch (type) {
-            case "TASK":
+            case TASK:
                 Task task = new Task(title, description);
                 task.setId(id);
                 task.setStatus(status);
@@ -66,7 +64,7 @@ public class TaskConverter {
                 task.setDuration(duration);
                 return task;
 
-            case "EPIC":
+            case EPIC:
                 Epic epic = new Epic(title, description);
                 epic.setId(id);
                 epic.setStatus(status);
@@ -74,9 +72,9 @@ public class TaskConverter {
                 epic.setDuration(duration);
                 return epic;
 
-            case "SUBTASK":
+            case SUBTASK:
                 int epicId = Integer.parseInt(epicIdField);
-                Epic parentEpic = (Epic) FileBackedTaskManager.getEpicById(epicId);
+                Epic parentEpic = manager.getEpicById(epicId);
                 Subtask subtask = new Subtask(title, description, parentEpic);
                 subtask.setId(id);
                 subtask.setStatus(status);
@@ -91,16 +89,14 @@ public class TaskConverter {
 
     // Вспомогательные методы
     private static String getTaskType(Task task) {
-        if (task instanceof Epic) return "EPIC";
-        if (task instanceof Subtask) return "SUBTASK";
-        return "TASK";
+        return task.getType().name(); // Возвращаем имя типа задачи
     }
 
-    private static LocalDateTime parseDateTime(String str) {
-        if (str == null || str.isEmpty()) return null;
+    private static LocalDateTime parseDateTime(String dateTimeString) {
+        if (dateTimeString == null || dateTimeString.isEmpty()) return null;
         try {
-            return LocalDateTime.parse(str, DATE_TIME_FORMATTER);
-        } catch (DateTimeParseException e) {
+            return LocalDateTime.parse(dateTimeString, DATE_TIME_FORMATTER);
+        } catch (DateTimeParseException parseException) {
             return null;
         }
     }
@@ -109,7 +105,7 @@ public class TaskConverter {
         if (str == null || str.isEmpty()) return null;
         try {
             return Duration.ofMinutes(Long.parseLong(str));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException exception) {
             return null;
         }
     }

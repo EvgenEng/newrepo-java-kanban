@@ -106,20 +106,9 @@ public class Epic extends Task {
     }
 
     @Override
-    public TaskStatus getStatus() {
-        if (subtasks.isEmpty()) {
-            return TaskStatus.NEW; // Если подзадач нет, статус Epic — NEW
-        }
-
-        boolean allNew = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.NEW);
-        boolean allDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == TaskStatus.DONE);
-
-        if (allNew) {
-            return TaskStatus.NEW; // Если все подзадачи имеют статус NEW
-        } else if (allDone) {
-            return TaskStatus.DONE; // Если все подзадачи имеют статус DONE
-        } else {
-            return TaskStatus.IN_PROGRESS; // Если статусы смешанные или все IN_PROGRESS
-        }
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
+
+
 }

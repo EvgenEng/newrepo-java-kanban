@@ -46,32 +46,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) throws ManagerSaveException {
-        saveToFile();
+    public void createTask(Task task) throws ManagerSaveException {
+        super.createTask(task); // Сохраняем задачу в памяти
+        saveToFile();          // Сохраняем изменения в файл
     }
 
     @Override
-    public void addEpic(Epic epic) throws ManagerSaveException {
-        saveToFile();
+    public void createEpic(Epic epic) throws ManagerSaveException {
+        super.createEpic(epic); // Сохраняем эпик в памяти
+        saveToFile();           // Сохраняем изменения в файл
     }
 
     @Override
-    public void addSubtask(Subtask subtask) throws ManagerSaveException {
-        saveToFile();
-    }
-
-    @Override
-    public void removeTask(int id) throws ManagerSaveException {
-        super.removeTask(id);
-    }
-
-    @Override
-    public void removeEpic(int id) throws ManagerSaveException {
-        saveToFile();
+    public void createSubtask(Subtask subtask) throws ManagerSaveException {
+        super.createSubtask(subtask); // Сохраняем подзадачу в памяти
+        saveToFile();                // Сохраняем изменения в файл
     }
 
     @Override
     public void removeSubtask(int id) throws ManagerSaveException {
+        super.removeSubtask(id);
         saveToFile();
     }
 
@@ -118,18 +112,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(status);
+                createTask(task); // Использую createTask
                 break;
             case EPIC:
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(status);
+                createEpic(epic); // Использую createEpic
                 break;
             case SUBTASK:
-                Epic epicForSubtask = super.getEpic(epicId);
+                Epic epicForSubtask = super.getEpicById(epicId);
                 if (epicForSubtask != null) {
                     Subtask subtask = new Subtask(name, description, epicForSubtask);
                     subtask.setId(id);
                     subtask.setStatus(status);
+                    createSubtask(subtask); // Использую createSubtask
                 }
                 break;
             default:
