@@ -37,12 +37,14 @@ public interface TaskManager {
     Task getTaskById(int id);
 
     Subtask getSubtaskById(int id);
-    
+
     Epic getEpicById(int id); //добавлен метод
 
     // Получение всех задач
     List<Task> getAllTasks();
+
     List<Subtask> getAllSubtasks();
+    
     List<Epic> getAllEpics();
 
     // Получение подзадач для эпика
