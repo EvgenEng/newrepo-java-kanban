@@ -35,7 +35,9 @@ public interface TaskManager {
 
     // Получение задач по ID
     Task getTaskById(int id);
+
     Subtask getSubtaskById(int id);
+    
     Epic getEpicById(int id); //добавлен метод
 
     // Получение всех задач
@@ -53,6 +55,6 @@ public interface TaskManager {
     void clearTasks(); // Очистка всех задач
 
     void clearSubtasks(); // Очистка всех подзадач
-    
+
     void clearEpics(); // Очистка всех эпиков и связанных подзадач
 }
