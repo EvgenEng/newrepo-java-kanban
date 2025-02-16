@@ -13,7 +13,7 @@ import java.util.*;
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
     private final Map<Integer, Task> tasks = new HashMap<>();
-    protected  final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
@@ -29,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    private void validateAndAddToPrioritized(Task task) {
+    private void validateAndAddToPrioritized(Task task) throws ManagerSaveException {
         if (task.getStartTime() == null) return;
 
         if (hasTimeOverlap(task)) {
@@ -105,7 +105,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws ManagerSaveException {
         if (task == null || !tasks.containsKey(task.getId())) return;
 
         Task oldTask = tasks.get(task.getId());
@@ -142,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public void createSubtask(Subtask subtask) throws ManagerSaveException {
         if (subtask == null || subtask.getEpic() == null) return;
         subtask.setId(idCounter++);
         validateAndAddToPrioritized(subtask); // Проверка пересечений
@@ -162,7 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
         if (subtask == null || !subtasks.containsKey(subtask.getId())) return;
 
         Subtask oldSubtask = subtasks.get(subtask.getId());

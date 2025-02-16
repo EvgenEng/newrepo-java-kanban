@@ -1,13 +1,13 @@
 package tests;
 
-import manager.InMemoryTaskManager; // Импортируем менеджер задач
+import interfaces.HistoryManager;
 import interfaces.TaskManager; // Импортируем интерфейс менеджера задач
 import manager.ManagerSaveException;
+import manager.Managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Subtask;
-import task.Task;
 import task.TaskStatus;
 
 import java.util.List;
@@ -17,32 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
     private TaskManager taskManager; // Используем интерфейс TaskManager
     private Epic epic;
+    private HistoryManager subtasks;
 
     @BeforeEach
-    void setUp() {
-        taskManager = new InMemoryTaskManager() {
-            @Override
-            public void createTask(Task task) throws ManagerSaveException {
-
-            }
-
-            @Override
-            public void addSubtask(Subtask subtask) throws ManagerSaveException {
-
-            }
-
-            @Override
-            public void removeSubtask(int id) throws ManagerSaveException {
-                Subtask subtask = subtasks.remove(id); // Удаляем подзадачу из списка
-
-            }
-        }; // Используем конкретную реализацию
+    void setUp() throws ManagerSaveException {
+        taskManager = Managers.getDefault(); // Используем метод Managers.getDefault() для создания менеджера задач
         epic = new Epic("Epic Title", "Epic Description", 1);
         taskManager.createEpic(epic); // Добавляем эпик через менеджер задач
     }
 
     @Test
-    void shouldClearSubtasksAndUpdateEpicStatus() {
+    void shouldClearSubtasksAndUpdateEpicStatus() throws ManagerSaveException {
         Subtask subtask1 = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 2);
         Subtask subtask2 = new Subtask("Subtask 2", "Subtask Description", epic, TaskStatus.NEW, 3);
 
@@ -57,18 +42,18 @@ class EpicTest {
     }
 
     @Test
-    void shouldUpdateEpicStatusWhenSubtasksAreAdded() {
+    void shouldUpdateEpicStatusWhenSubtasksAreAdded() throws ManagerSaveException {
         Subtask subtask1 = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.NEW, 2);
         Subtask subtask2 = new Subtask("Subtask 2", "Subtask Description", epic, TaskStatus.DONE, 3);
 
         taskManager.createSubtask(subtask1); // Добавляем подзадачи через менеджер задач
         taskManager.createSubtask(subtask2);
 
-//        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус Epic должен быть IN_PROGRESS при смешанных статусах подзадач.");
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус Epic должен быть IN_PROGRESS при смешанных статусах подзадач.");
     }
 
     @Test
-    void shouldUpdateEpicStatusWhenSubtaskIsRemoved() {
+    void shouldUpdateEpicStatusWhenSubtaskIsRemoved() throws ManagerSaveException {
         Subtask subtask1 = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.DONE, 2);
         taskManager.createSubtask(subtask1); // Добавляем подзадачу через менеджер задач
     }
@@ -79,7 +64,7 @@ class EpicTest {
     }
 
     @Test
-    void shouldReturnDoneStatusWhenAllSubtasksAreDone() {
+    void shouldReturnDoneStatusWhenAllSubtasksAreDone() throws ManagerSaveException {
         Subtask subtask1 = new Subtask("Subtask 1", "Subtask Description", epic, TaskStatus.DONE, 2);
         Subtask subtask2 = new Subtask("Subtask 2", "Subtask Description", epic, TaskStatus.DONE, 3);
 

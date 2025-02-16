@@ -13,11 +13,11 @@ public interface TaskManager {
     List<Task> getPrioritizedTasks();
 
     // Создание задач
-    void createTask(Task task);
+    void createTask(Task task) throws ManagerSaveException;
 
-    void createSubtask(Subtask subtask);
+    void createSubtask(Subtask subtask) throws ManagerSaveException;
 
-    void createEpic(Epic epic);
+    void createEpic(Epic epic) throws ManagerSaveException;
 
     // Обновление задач
     void updateTask(Task task) throws ManagerSaveException;

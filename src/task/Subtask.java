@@ -33,4 +33,7 @@ public class Subtask extends Task {
     public TaskType getType() {
         return TaskType.SUBTASK;
     }
+
+    public void put(int id, Subtask subtask) {
+    }
 }

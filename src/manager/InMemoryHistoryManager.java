@@ -1,6 +1,7 @@
 package manager;
 
 import interfaces.HistoryManager;
+import task.Subtask;
 import task.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,12 +39,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id) {
+    public Subtask remove(int id) {
         // Удаляем задачу из истории
         Node node = nodeMap.remove(id); // Удаляем узел из HashMap
         if (node != null) {
             removeNode(node); // Удаляем узел из списка
         }
+        return null;
     }
 
     @Override
