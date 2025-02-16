@@ -14,17 +14,23 @@ public interface TaskManager {
 
     // Создание задач
     void createTask(Task task);
+
     void createSubtask(Subtask subtask);
+
     void createEpic(Epic epic);
 
     // Обновление задач
     void updateTask(Task task) throws ManagerSaveException;
+
     void updateSubtask(Subtask subtask) throws ManagerSaveException;
+
     void updateEpic(Epic epic);
 
     // Удаление задач по ID
     void deleteTaskById(int id);
+
     void deleteSubtaskById(int id);
+
     void deleteEpicById(int id);
 
     // Получение задач по ID
@@ -45,6 +51,8 @@ public interface TaskManager {
 
     // Методы для очистки
     void clearTasks(); // Очистка всех задач
+
     void clearSubtasks(); // Очистка всех подзадач
+    
     void clearEpics(); // Очистка всех эпиков и связанных подзадач
 }
