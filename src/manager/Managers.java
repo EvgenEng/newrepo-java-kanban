@@ -8,6 +8,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
+        // Просто возвращаем новый экземпляр InMemoryTaskManager
         return new InMemoryTaskManager();
     }
 

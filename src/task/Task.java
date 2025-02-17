@@ -1,78 +1,125 @@
 package task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 public class Task {
+    private int id;
+    private String title;
+    private String description;
+    private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    private int id; // уник идентификатор задачи
-    private String title; // название задачи
-    private String descriptions; // описание задачи
-    private TaskStatus status; // статус задачи
-
-    // Конструктор для создания задачи с заданным статусом
-    public Task(String title, String descriptions, TaskStatus status, int id) {
-
+    // Конструктор для создания с ID и статусом
+    public Task(String title, String description, TaskStatus status, int id) {
         this.id = id;
         this.title = title;
-        this.descriptions = descriptions;
-        this.status = status; // установка состояния
+        this.description = description;
+        this.status = status;
     }
 
-    // Конструктор по умолчанию, устанавливающий статус NEW
-    public Task(String title, String descriptions) {
+    // Конструктор по умолчанию
+    public Task(String title, String description) {
+        this(title, description, TaskStatus.NEW, 0);
+    }
 
-        this.id = 0; // Идентификатор по умолчанию
+    // Конструктор с временем начала и продолжительностью
+    public Task(String title, String description, TaskStatus status, int id, LocalDateTime startTime, int durationMinutes) {
+        this.id = id;
         this.title = title;
-        this.descriptions = descriptions;
-        this.status = TaskStatus.NEW; // Статус по умолчанию
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(durationMinutes); // Преобразуем минуты в Duration
     }
 
-    public Task() {
-    }
-
-    public Integer getId() {
+    // Геттеры и сеттеры
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public TaskStatus getStatus() {
         return status;
     }
 
-    // Установка статуса задачи
-    public void setStatus(TaskStatus taskStatus) {
-        this.status = taskStatus; // Устанавливаем новый статус
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
-    // Установка идентификатора задачи
-    public void setId(int id) {
-        this.id = id; // Устанавливаем новый идентификатор
+    public Duration getDuration() {
+        return duration;
     }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    // Метод для получения времени окончания задачи
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration); // Используем Duration для вычисления времени окончания
+    }
+
+    // Переопределение equals и hashCode
     @Override
-    public boolean equals(Object obj) {
-
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Task task = (Task) obj;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
         return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(id);
+        return Objects.hash(id);
     }
 
-    public String getDescription() {
-        return descriptions; // Возвращаем описание задачи
+    // Переопределение toString для удобного вывода информации о задаче
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", duration=" + (duration != null ? duration.toMinutes() + "m" : "null") +
+                ", startTime=" + (startTime != null ? startTime.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "null") +
+                '}';
     }
 
-    public Object getName() {
-        return null;
-    }
-
-    public Object getEpicId() {
-        return null;
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 }

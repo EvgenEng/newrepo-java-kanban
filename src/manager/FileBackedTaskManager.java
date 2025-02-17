@@ -4,6 +4,7 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 import task.TaskStatus;
+import task.TaskType; // Импорт TaskType из нового класса
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +16,6 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public final String filePath;
-
-    // 1. Добавляем enum для типов задач
-    enum TaskType {
-        TASK,
-        EPIC,
-        SUBTASK
-    }
 
     public FileBackedTaskManager(String path) throws ManagerSaveException {
         this.filePath = path;
@@ -52,33 +46,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) throws ManagerSaveException {
-        super.addTask(task);
-        saveToFile();
+    public void createTask(Task task) throws ManagerSaveException {
+        super.createTask(task); // Сохраняем задачу в памяти
+        saveToFile();          // Сохраняем изменения в файл
     }
 
     @Override
-    public void addEpic(Epic epic) throws ManagerSaveException {
-        super.addEpic(epic);
-        saveToFile();
+    public void createEpic(Epic epic) throws ManagerSaveException {
+        super.createEpic(epic); // Сохраняем эпик в памяти
+        saveToFile();           // Сохраняем изменения в файл
     }
 
     @Override
-    public void addSubtask(Subtask subtask) throws ManagerSaveException {
-        super.addSubtask(subtask);
-        saveToFile();
-    }
-
-    @Override
-    public void removeTask(int id) throws ManagerSaveException {
-        super.removeTask(id);
-        saveToFile();
-    }
-
-    @Override
-    public void removeEpic(int id) throws ManagerSaveException {
-        super.removeEpic(id);
-        saveToFile();
+    public void createSubtask(Subtask subtask) throws ManagerSaveException {
+        super.createSubtask(subtask); // Сохраняем подзадачу в памяти
+        saveToFile();                // Сохраняем изменения в файл
     }
 
     @Override
@@ -130,21 +112,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(status);
-                super.addTask(task);
+                createTask(task); // Использую createTask
                 break;
             case EPIC:
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(status);
-                super.addEpic(epic);
+                createEpic(epic); // Использую createEpic
                 break;
             case SUBTASK:
-                Epic epicForSubtask = super.getEpic(epicId);
+                Epic epicForSubtask = super.getEpicById(epicId);
                 if (epicForSubtask != null) {
                     Subtask subtask = new Subtask(name, description, epicForSubtask);
                     subtask.setId(id);
                     subtask.setStatus(status);
-                    super.addSubtask(subtask);
+                    createSubtask(subtask); // Использую createSubtask
                 }
                 break;
             default:
@@ -157,20 +139,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> lines = new ArrayList<>();
             lines.add("id,type,name,status,description,epic");
 
-            // Сначала эпики
-            for (Epic epic : getAllEpics()) {
-                lines.add(TaskConverter.taskToString(epic));
-            }
-
-            // Затем подзадачи
-            for (Subtask subtask : getAllSubtasks()) {
-                lines.add(TaskConverter.taskToString(subtask));
-            }
-
-            // Обычные задачи
-            for (Task task : getAllTasks()) {
-                lines.add(TaskConverter.taskToString(task));
-            }
+            getAllEpics().forEach(epic -> lines.add(TaskConverter.taskToString(epic)));
+            getAllSubtasks().forEach(subtask -> lines.add(TaskConverter.taskToString(subtask)));
+            getAllTasks().forEach(task -> lines.add(TaskConverter.taskToString(task)));
 
             Files.write(Paths.get(filePath), lines);
         } catch (IOException e) {
