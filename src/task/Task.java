@@ -35,8 +35,8 @@ public class Task {
         this.duration = Duration.ofMinutes(durationMinutes); // Преобразуем минуты в Duration
     }
 
-    public Task(String title , String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
-        this.title  = title ;
+    public Task(String title, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        this.title = title;
         this.description = description;
         this.status = status;
         this.duration = duration;
