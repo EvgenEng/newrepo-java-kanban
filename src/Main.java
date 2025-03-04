@@ -5,15 +5,15 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 import task.TaskStatus;
-
+import manager.HttpTaskServer;
 import java.io.File;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws ManagerSaveException {
+    public static void main(String[] args) throws ManagerSaveException, IOException {
     File dataFile = new File("tasks.csv");
     TaskManager taskManager = new FileBackedTaskManager(dataFile.getAbsolutePath());
-
-    // Оригинальный код создания задач
+    
     Task task1 = new Task("Задача 1", "Описание задачи 1");
     Task task2 = new Task("Задача 2", "Описание задачи 2");
     taskManager.createTask(task1);
@@ -35,7 +35,6 @@ public class Main {
     Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1, TaskStatus.NEW, 3);
     taskManager.createSubtask(subtask3);
 
-    // Добавлено использование loadFromFile()
     try {
         TaskManager loadedManager = FileBackedTaskManager.loadFromFile(dataFile);
         System.out.println("\n=== Данные, загруженные из файла ===");
@@ -44,10 +43,8 @@ public class Main {
         System.out.println("Ошибка загрузки: " + e.getMessage());
     }
 
-    // Оригинальный код вывода
     printAllTasks(taskManager);
 
-    // Остальная часть оригинального кода без изменений
     task1.setStatus(TaskStatus.DONE);
     subtask1.setStatus(TaskStatus.DONE);
     subtask2.setStatus(TaskStatus.NEW);
@@ -64,9 +61,14 @@ public class Main {
 
     System.out.println("Списки после удаления: ");
     printAllTasks(taskManager);
-}
 
-// Метод printAllTasks без изменений
+    //Запуск сервера
+        System.out.println("Запуск HTTP-сервера...");
+        HttpTaskServer server = new HttpTaskServer(taskManager);
+        server.start();
+        System.out.println("HTTP-сервер запущен!");
+    }
+
 private static void printAllTasks(TaskManager manager) {
     System.out.println("Задачи:");
     for (Task task : manager.getAllTasks()) {

@@ -35,6 +35,14 @@ public class Task {
         this.duration = Duration.ofMinutes(durationMinutes); // Преобразуем минуты в Duration
     }
 
+    public Task(String title , String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        this.title  = title ;
+        this.description = description;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
     // Геттеры и сеттеры
     public int getId() {
         return id;
@@ -106,7 +114,6 @@ public class Task {
         return Objects.hash(id);
     }
 
-    // Переопределение toString для удобного вывода информации о задаче
     @Override
     public String toString() {
         return "Task{" +

@@ -285,4 +285,11 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpic(int epicId) {
         return epics.get(epicId);
     }
+
+    private final List<Task> history = new ArrayList<>();
+
+    @Override
+    public void clearHistory() {
+        history.clear();
+    }
 }
