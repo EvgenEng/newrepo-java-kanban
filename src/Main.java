@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws ManagerSaveException, IOException {
     File dataFile = new File("tasks.csv");
     TaskManager taskManager = new FileBackedTaskManager(dataFile.getAbsolutePath());
-    
+
     Task task1 = new Task("Задача 1", "Описание задачи 1");
     Task task2 = new Task("Задача 2", "Описание задачи 2");
     taskManager.createTask(task1);
@@ -63,10 +63,10 @@ public class Main {
     printAllTasks(taskManager);
 
     //Запуск сервера
-        System.out.println("Запуск HTTP-сервера...");
-        HttpTaskServer server = new HttpTaskServer(taskManager);
-        server.start();
-        System.out.println("HTTP-сервер запущен!");
+    System.out.println("Запуск HTTP-сервера...");
+    HttpTaskServer server = new HttpTaskServer(taskManager);
+    server.start();
+    System.out.println("HTTP-сервер запущен!");
     }
 
 private static void printAllTasks(TaskManager manager) {
