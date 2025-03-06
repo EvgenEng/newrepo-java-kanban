@@ -1,18 +1,20 @@
-package manager;
+package handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import interfaces.TaskManager;
-import task.Epic;
+import manager.BaseHttpHandler;
+import manager.HttpStatusCode;
+import task.Subtask;
 
 import java.io.IOException;
 
-public class EpicHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public EpicHandler(TaskManager taskManager, Gson gson) {
+    public SubtaskHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }
@@ -22,20 +24,20 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         String method = exchange.getRequestMethod();
         switch (method) {
             case "GET":
-                sendText(exchange, gson.toJson(taskManager.getAllEpics()), HttpStatusCode.OK.getCode());
+                sendText(exchange, gson.toJson(taskManager.getAllSubtasks()), HttpStatusCode.OK.getCode());
                 break;
             case "POST":
                 String body = new String(exchange.getRequestBody().readAllBytes());
-                Epic epic = gson.fromJson(body, Epic.class);
+                Subtask subtask = gson.fromJson(body, Subtask.class);
                 try {
-                    taskManager.createEpic(epic);
+                    taskManager.createSubtask(subtask);
                     sendText(exchange, "", HttpStatusCode.CREATED.getCode());
                 } catch (Exception e) {
                     sendNotAcceptable(exchange);
                 }
                 break;
             case "DELETE":
-                taskManager.clearEpics();
+                taskManager.clearSubtasks();
                 sendText(exchange, "", HttpStatusCode.OK.getCode());
                 break;
             default:

@@ -1,9 +1,11 @@
-package manager;
+package handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import interfaces.TaskManager;
+import manager.BaseHttpHandler;
+import manager.HttpStatusCode;
 import task.Task;
 
 import java.io.IOException;

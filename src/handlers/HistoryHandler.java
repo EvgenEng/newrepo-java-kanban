@@ -1,18 +1,19 @@
-package manager;
+package handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import interfaces.TaskManager;
-import task.Subtask;
+import manager.BaseHttpHandler;
+import manager.HttpStatusCode;
 
 import java.io.IOException;
 
-public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public SubtaskHandler(TaskManager taskManager, Gson gson) {
+    public HistoryHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }
@@ -22,20 +23,10 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
         String method = exchange.getRequestMethod();
         switch (method) {
             case "GET":
-                sendText(exchange, gson.toJson(taskManager.getAllSubtasks()), HttpStatusCode.OK.getCode());
-                break;
-            case "POST":
-                String body = new String(exchange.getRequestBody().readAllBytes());
-                Subtask subtask = gson.fromJson(body, Subtask.class);
-                try {
-                    taskManager.createSubtask(subtask);
-                    sendText(exchange, "", HttpStatusCode.CREATED.getCode());
-                } catch (Exception e) {
-                    sendNotAcceptable(exchange);
-                }
+                sendText(exchange, gson.toJson(taskManager.getHistory()), HttpStatusCode.OK.getCode());
                 break;
             case "DELETE":
-                taskManager.clearSubtasks();
+                taskManager.clearHistory();
                 sendText(exchange, "", HttpStatusCode.OK.getCode());
                 break;
             default:
