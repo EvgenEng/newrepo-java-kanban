@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class BaseHttpHandler {
+    public static final String METHOD_NOT_ALLOWED_MESSAGE = "{\"error\":\"Method Not Allowed\"}";
+
     protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
         byte[] response = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -13,18 +15,15 @@ public class BaseHttpHandler {
         exchange.close();
     }
 
-    // Метод для отправки ответа "Not Found" (404)
     protected void sendNotFound(HttpExchange exchange) throws IOException {
-        sendText(exchange, "{\"error\":\"Not Found\"}", 404);
+        sendText(exchange, "{\"error\":\"Not Found\"}", HttpStatusCode.NOT_FOUND.getCode());
     }
 
-    // Метод для отправки ответа с ошибкой (500)
-    protected void sendError(HttpExchange exchange, String message) throws IOException {
-        sendText(exchange, "{\"error\":\"" + message + "\"}", 500);
-    }
-
-    // Метод для отправки ответа "Not Acceptable" (406)
     protected void sendNotAcceptable(HttpExchange exchange) throws IOException {
-        sendText(exchange, "{\"error\":\"Not Acceptable\"}", 406);
+        sendText(exchange, "{\"error\":\"Not Acceptable\"}", HttpStatusCode.NOT_ACCEPTABLE.getCode());
+    }
+
+    protected void sendError(HttpExchange exchange, String message) throws IOException {
+        sendText(exchange, "{\"error\":\"" + message + "\"}", HttpStatusCode.INTERNAL_SERVER_ERROR.getCode());
     }
 }
