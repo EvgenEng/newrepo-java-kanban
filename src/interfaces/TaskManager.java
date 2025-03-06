@@ -59,4 +59,6 @@ public interface TaskManager {
     void clearSubtasks(); // Очистка всех подзадач
 
     void clearEpics(); // Очистка всех эпиков и связанных подзадач
+
+    void clearHistory();
 }
